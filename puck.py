@@ -9,7 +9,7 @@ dec = {
 
 number = lambda x : '+'.join([str(dec['one']) for i in range(x)])
 
-#unused
+# number selection algorithm: (comming soon)
 def gen_number(n):
     if n % 2 == 0:
         # even
