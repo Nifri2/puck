@@ -1,6 +1,4 @@
 
-from cgi import print_arguments
-
 
 dec = {
     'zero': "(+all([[]]))",
