@@ -14,3 +14,12 @@ s=eval("chr(eval('(+all([]))+(+all([]))+(+all([]))+(+all([]))+(+all([]))+(+all([
 ```
 
 and can be run using python
+
+example: 
+```sh
+python puck.py puck.py
+```
+a file called puck.py.puck will be created, you can run it aswell:
+```py
+python puck.py.puck somescript.py
+```
