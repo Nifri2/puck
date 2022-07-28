@@ -14,6 +14,8 @@ dec = {
 
 number = lambda x,n : '+'.join([str(dec[n]) for i in range(x)])
 
+#  used chars, i wanted to do a different approach initially, but it somehow morphed into this
+# i think i could remove it
 q = "'"
 p = '"'
 chars = {
@@ -62,7 +64,7 @@ def compile_file(fn):
     lines = []
     with open(fn, 'r') as f:
         lines = f.readlines()
-    nf = ["import sys\n", "sys.setrecursionlimit(10**6)\n"]
+    nf = ["import sys\n", "sys.setrecursionlimit(10**6)\n"] # this should make everyone reading this sad
     for line in lines:
         nf.append(line)
     with open(fn + ".tmp", 'w') as f: # do i need files? no i dont, im still doing it
