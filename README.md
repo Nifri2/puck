@@ -1,4 +1,4 @@
-# Puck
+# PyFuck
 
 My Own implementation of PyFuck inspired by JSFuck.
 
