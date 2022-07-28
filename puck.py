@@ -1,7 +1,8 @@
 import argparse
-
+import os
 
 # numbers could be done in different way, but i likehow this looks
+# i could use (+all([[]])) for everything, but wheres the fun in that?
 
 dec = {
     'zero': "(+all([[]]))",
@@ -58,7 +59,15 @@ def gen_number(n):
 
 # expected: file_name.py
 def compile_file(fn):
+    lines = []
     with open(fn, 'r') as f:
+        lines = f.readlines()
+    nf = ["import sys\n", "sys.setrecursionlimit(10**6)\n"]
+    for line in lines:
+        nf.append(line)
+    with open(fn + ".tmp", 'w') as f: # do i need files? no i dont, im still doing it
+        f.writelines(nf)
+    with open(fn + ".tmp", 'r') as f:
         s = f.read()
         lf = []
         for char in s:
@@ -69,8 +78,9 @@ def compile_file(fn):
             if char.isdigit():
                 lf.append(gen_number(char))
         with open('pucked_' + fn, 'w') as f:
-            ln = f.write(f"s=eval({p}{'+'.join(lf)}{p});exec(s)")
+            ln = f.write(f"s=eval({p}{'+'.join(lf)}{p});print(s)")
         print(f'compiled {ln}b to pucked_{fn}')
+    os.remove(fn + ".tmp")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
