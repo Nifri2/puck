@@ -1,6 +1,9 @@
 import argparse
 import os
 
+# this is a shitcode project dont expect S tier python
+
+
 # numbers could be done in different way, but i likehow this looks
 # i could use (+all([[]])) for everything, but wheres the fun in that?
 
