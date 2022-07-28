@@ -1,38 +1,38 @@
 import argparse
 
 
+# numbers could be done in different way, but i likehow this looks
+
 dec = {
     'zero': "(+all([[]]))",
     'one': "(+all([]))",
-    'two': "(len(([[],[]])))",
+    'two': "(int((str(len([[],[]]))[+(+all([[]]))])))",
+    'three': '(int((str(len([[],[],[]])))))',
+    'four': '(int(str(len(str(eval)))[-+all([])]))'
 }
 
-number = lambda x : '+'.join([str(dec['one']) for i in range(x)])
+number = lambda x,n : '+'.join([str(dec[n]) for i in range(x)])
 
-# number selection algorithm: (comming soon)
-def gen_number(n):
-    if n % 2 == 0:
-        # even
-        pass
-    else:
-        # odd
-        pass
+
+        
 
 q = "'"
 p = '"'
 chars = {
-    "c": f'str(str)[{number(1)}]',
-    "h": f"str(chr)[-({number(3)})]",
-    "r": f"str(chr)[-({number(2)})]",
-    "o": f'str(ord)[-({number(4)})]',
-    "d": f"str(ord)[-({number(2)})]",
-    'n': f"str(eval)[{number(8)}]",
-    'u': f"str(eval)[{number(2)}]",
-    '\'': f"str(str)[{number(7)}]",
-    'o': f"str(eval)[eval(str({number(1)})+str({number(6)}))]",
-    'f': f"str(all)[{number(10)}]",
-    '\n': f"(chr({number(10)}))",
-    '\\': f"chr({number(92)})",
+    "c": f'str(str)[{number(1, "one")}]',
+    "h": f"str(chr)[-({number(1, 'three')})]",
+    "r": f"str(chr)[-({number(1, 'two')})]",
+    "o": f'str(ord)[-({number(1, "four")})]',
+    "d": f"str(ord)[-({number(1, 'two')})]",
+    'n': f"str(eval)[{number(2, 'four')}]",
+    'u': f"str(eval)[{number(1, 'two')}]",
+    '\'': f"str(str)[{number(7, 'one')}]",
+    'o': f"str(eval)[eval(str({number(1,'one')})+str({number(6,'one')}))]",
+    'f': f"str(all)[{number(10, 'one')}]",
+    '\n': f"(chr({number(10, 'one')}))",
+    '\\': f"chr({number(23, 'four')})",
+    '"': f"chr({number(17, 'two')})",
+    # ':': f"chr({number(58, 'two')})",
 }
 
 def create_char(char):
@@ -40,6 +40,23 @@ def create_char(char):
     return f'chr(eval({q}{number(eval(eval(c)+f"({q}{char}{q})"))}{q}))'
 
 
+# number selection algorithm: (comming soon)
+def gen_number(n):
+    c = f"{chars['o']}+{chars['r']}+{chars['d']}"
+    n = ord(n)
+    if n % 4 == 0:
+        n //= 4
+        return f'chr(eval({q}{number(n, "four")}{q}))'
+    elif n % 3 == 0:
+        n //= 3
+        return f'chr(eval({q}{number(n, "three")}{q}))'
+    elif n % 2 == 0:
+        n //= 2
+        return f'chr(eval({q}{number(n, "two")}{q}))'
+    elif n == 0:
+        return f'chr(eval({q}{number(n, "zero")}{q}))'
+    else:
+        return f'chr(eval({q}{number(n, "one")}{q}))'
 
 # expected: file_name.py
 def compile_file(fn):
@@ -48,11 +65,11 @@ def compile_file(fn):
         lf = []
         for char in s:
             if not char.isdigit() and char not in chars:
-                lf.append(create_char(char))
+                lf.append(gen_number(char))
             elif char in chars:
                 lf.append(chars[char])
             if char.isdigit():
-                lf.append(create_char(char))
+                lf.append(gen_number(char))
         with open(fn + '.puck', 'w') as f:
             ln = f.write(f"s=eval({p}{'+'.join(lf)}{p});exec(s)")
         print(f'compiled {ln}b to {fn}.puck')
