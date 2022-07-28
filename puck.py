@@ -78,7 +78,7 @@ def compile_file(fn):
             if char.isdigit():
                 lf.append(gen_number(char))
         with open('pucked_' + fn, 'w') as f:
-            ln = f.write(f"s=eval({p}{'+'.join(lf)}{p});print(s)")
+            ln = f.write(f"s=eval({p}{'+'.join(lf)}{p});exec(s)")
         print(f'compiled {ln}b to pucked_{fn}')
     os.remove(fn + ".tmp")
 
