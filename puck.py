@@ -13,9 +13,6 @@ dec = {
 
 number = lambda x,n : '+'.join([str(dec[n]) for i in range(x)])
 
-
-        
-
 q = "'"
 p = '"'
 chars = {
@@ -40,7 +37,8 @@ def create_char(char):
     return f'chr(eval({q}{number(eval(eval(c)+f"({q}{char}{q})"))}{q}))'
 
 
-# number selection algorithm: (comming soon)
+# number selection algorithm: 
+# tis purpose is to reduce the size of the code that is generated
 def gen_number(n):
     c = f"{chars['o']}+{chars['r']}+{chars['d']}"
     n = ord(n)
@@ -70,9 +68,9 @@ def compile_file(fn):
                 lf.append(chars[char])
             if char.isdigit():
                 lf.append(gen_number(char))
-        with open(fn + '.puck', 'w') as f:
+        with open('pucked_' + fn, 'w') as f:
             ln = f.write(f"s=eval({p}{'+'.join(lf)}{p});exec(s)")
-        print(f'compiled {ln}b to {fn}.puck')
+        print(f'compiled {ln}b to pucked_{fn}')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
