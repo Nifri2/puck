@@ -21,7 +21,7 @@ example:
 ```sh
 python puck.py puck.py
 ```
-a file called puck.py.puck will be created, you can run it aswell:
+a file called `pcuked_puck.py` will be created, you can run it aswell:
 ```py
-python puck.py.puck somescript.py
+python pucked_puck.py somescript.py
 ```
