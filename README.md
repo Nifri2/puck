@@ -2,6 +2,8 @@
 
 My Own implementation of PyFuck inspired by JSFuck.
 
+There are no comments in the script, so it can encode itself, its strill struggeling with larger scripts due to the recursion limits.
+
 Still trying to improve it.
 
 A good start is to run the script on itself, and run the encoded version.

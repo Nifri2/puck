@@ -1,12 +1,6 @@
 import argparse
 import os
 
-# this is a shitcode project dont expect S tier python
-
-
-# numbers could be done in different way, but i likehow this looks
-# i could use (+all([[]])) for everything, but wheres the fun in that?
-
 dec = {
     'zero': "(+all([[]]))",
     'one': "(+all([]))",
@@ -17,8 +11,6 @@ dec = {
 
 number = lambda x,n : '+'.join([str(dec[n]) for i in range(x)])
 
-#  used chars, i wanted to do a different approach initially, but it somehow morphed into this
-# i think i could remove it
 q = "'"
 p = '"'
 chars = {
@@ -43,8 +35,6 @@ def create_char(char):
     return f'chr(eval({q}{number(eval(eval(c)+f"({q}{char}{q})"))}{q}))'
 
 
-# number selection algorithm: 
-# tis purpose is to reduce the size of the code that is generated
 def gen_number(n):
     c = f"{chars['o']}+{chars['r']}+{chars['d']}"
     n = ord(n)
@@ -67,10 +57,10 @@ def compile_file(fn):
     lines = []
     with open(fn, 'r') as f:
         lines = f.readlines()
-    nf = ["import sys\n", "sys.setrecursionlimit(10**6)\n"] # this should make everyone reading this sad
+    nf = ["import sys\n", "sys.setrecursionlimit(10**9)\n"] 
     for line in lines:
         nf.append(line)
-    with open(fn + ".tmp", 'w') as f: # do i need files? no i dont, im still doing it
+    with open(fn + ".tmp", 'w') as f:
         f.writelines(nf)
     with open(fn + ".tmp", 'r') as f:
         s = f.read()
