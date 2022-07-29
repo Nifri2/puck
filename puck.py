@@ -1,6 +1,7 @@
 import argparse
-import os   
 
+# you can do everythingusing one and zero, but the other numbers reduce file size and partially prenvent recursion errors
+# the goal is to keep them smaller then the only ones counterpart
 dec = {
     'zero': "(+all([[]]))",
     'one': "(+all([]))",
@@ -15,6 +16,10 @@ number = lambda x,n : '+'.join([str(dec[n]) for i in range(x)])
 
 q = "'"
 p = '"'
+
+# characters that get used a lot, shortend. otherwise a char would be the lenght of like 500 chars
+# greatly reduces file size and recursion errors
+
 chars = {
     '\n':   f"(chr({number(10, 'one')}))",
     '"':    f"chr({number(17, 'two')})",
@@ -37,8 +42,8 @@ chars = {
     '[':    f"chr(int(str({number(1, 'nine')})+str({number(1, 'one')})))",
  }
 
+# this aswell reduces file size and recursion errors
 def gen_number(n):
-    # c = f"{chars['o']}+{chars['r']}+{chars['d']}"
     n = ord(n)
     if  n % 9 == 0:
         n //= 9

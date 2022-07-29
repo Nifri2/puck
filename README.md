@@ -2,7 +2,7 @@
 
 My own implementation of PyFuck inspired by JSFuck.
 
-There are no comments in the script, so it can encode itself, its still struggeling with larger scripts due to the recursion limit.
+Its still struggeling with larger scripts due to the recursion limit, but its getting there.
 
 Still trying to improve it.
 
