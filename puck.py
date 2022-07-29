@@ -1,12 +1,14 @@
 import argparse
-import os
+import os   
 
 dec = {
     'zero': "(+all([[]]))",
     'one': "(+all([]))",
-    'two': "(int((str(len([[],[]]))[+(+all([[]]))])))",
-    'three': '(int((str(len([[],[],[]])))))',
-    'four': '(int(str(len(str(eval)))[-+all([])]))'
+    'two': "(len([[],[]]))",
+    'three': '(+all([])+(len([[],[]])))',
+    'four': '(len([[],[]])+len([[],[]]))',
+    'five': '(len([[],[]])+(+all([])+(len([[],[]]))))',
+    'nine': "(len([[],[],[],[],[],[],[],[],[]]))"
 }
 
 number = lambda x,n : '+'.join([str(dec[n]) for i in range(x)])
@@ -14,31 +16,37 @@ number = lambda x,n : '+'.join([str(dec[n]) for i in range(x)])
 q = "'"
 p = '"'
 chars = {
-    "c": f'str(str)[{number(1, "one")}]',
-    "h": f"str(chr)[-({number(1, 'three')})]",
-    "r": f"str(chr)[-({number(1, 'two')})]",
-    "o": f'str(ord)[-({number(1, "four")})]',
-    "d": f"str(ord)[-({number(1, 'two')})]",
-    'n': f"str(eval)[{number(2, 'four')}]",
-    'u': f"str(eval)[{number(1, 'two')}]",
-    '\'': f"str(str)[{number(7, 'one')}]",
-    'o': f"str(eval)[eval(str({number(1,'one')})+str({number(6,'one')}))]",
-    'f': f"str(all)[{number(10, 'one')}]",
-    '\n': f"(chr({number(10, 'one')}))",
-    '\\': f"chr({number(23, 'four')})",
-    '"': f"chr({number(17, 'two')})",
-    # ':': f"chr({number(58, 'two')})",
-}
-
-def create_char(char):
-    c = f"{chars['o']}+{chars['r']}+{chars['d']}"
-    return f'chr(eval({q}{number(eval(eval(c)+f"({q}{char}{q})"))}{q}))'
-
+    '\n':   f"(chr({number(10, 'one')}))",
+    '"':    f"chr({number(17, 'two')})",
+    "'":    f"str(str)[{number(7, 'one')}]",
+    '\\':   f"chr({number(23, 'four')})",
+    'a':    f"str(set)[{number(1, 'three')}]",
+    'c':    f'str(str)[{number(1, "one")}]',
+    'd':    f"str(ord)[-({number(1, 'two')})]",
+    'e':    f"str(set)[-{number(1, 'four')}]",
+    'f':    f"str(all)[{number(10, 'one')}]",
+    'h':    f"str(chr)[-({number(1, 'three')})]",
+    'i':    f"str(list)[-({number(1, 'four')}+{number(1, 'one')})]",
+    'n':    f"str(eval)[{number(2, 'four')}]",
+    'o':    f"str(eval)[eval(str({number(1,'one')})+str({number(2,'three')}))]",
+    'r':    f"str(chr)[-({number(1, 'two')})]",
+    's':    f"str(str)[{number(1, 'four')}]",
+    't':    f"str(list)[-{number(1, 'three')}]",
+    'u':    f"str(eval)[{number(1, 'two')}]",
+    "#":    f"chr({number(7, 'five')})",
+    '[':    f"chr(int(str({number(1, 'nine')})+str({number(1, 'one')})))",
+ }
 
 def gen_number(n):
-    c = f"{chars['o']}+{chars['r']}+{chars['d']}"
+    # c = f"{chars['o']}+{chars['r']}+{chars['d']}"
     n = ord(n)
-    if n % 4 == 0:
+    if  n % 9 == 0:
+        n //= 9
+        return f'chr(eval({q}{number(n, "nine")}{q}))'
+    elif  n % 5 == 0:
+        n //= 5
+        return f'chr(eval({q}{number(n, "five")}{q}))'
+    elif n % 4 == 0:
         n //= 4
         return f'chr(eval({q}{number(n, "four")}{q}))'
     elif n % 3 == 0:
@@ -54,17 +62,20 @@ def gen_number(n):
 
 # expected: file_name.py
 def compile_file(fn):
-    lines = []
+    nf = "import sys\nsys.setrecursionlimit(8**10)\n"
+    lf = []
+    for char in nf:
+        if not char.isdigit() and char not in chars:
+            lf.append(gen_number(char))
+        elif char in chars:
+            lf.append(chars[char])
+        if char.isdigit():
+            lf.append(gen_number(char))
+    with open('pucked_' + fn, 'w') as f:
+            ln = f.write(f"s=eval({p}{'+'.join(lf)}{p});exec(s);")
+    lf = []
     with open(fn, 'r') as f:
-        lines = f.readlines()
-    nf = ["import sys\n", "sys.setrecursionlimit(10**9)\n"] 
-    for line in lines:
-        nf.append(line)
-    with open(fn + ".tmp", 'w') as f:
-        f.writelines(nf)
-    with open(fn + ".tmp", 'r') as f:
         s = f.read()
-        lf = []
         for char in s:
             if not char.isdigit() and char not in chars:
                 lf.append(gen_number(char))
@@ -72,10 +83,10 @@ def compile_file(fn):
                 lf.append(chars[char])
             if char.isdigit():
                 lf.append(gen_number(char))
-        with open('pucked_' + fn, 'w') as f:
+        with open('pucked_' + fn, 'a') as f:
             ln = f.write(f"s=eval({p}{'+'.join(lf)}{p});exec(s)")
         print(f'compiled {ln}b to pucked_{fn}')
-    os.remove(fn + ".tmp")
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
