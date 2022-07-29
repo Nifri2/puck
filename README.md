@@ -1,8 +1,8 @@
 # PyFuck
 
-My Own implementation of PyFuck inspired by JSFuck.
+My own implementation of PyFuck inspired by JSFuck.
 
-There are no comments in the script, so it can encode itself, its strill struggeling with larger scripts due to the recursion limits.
+There are no comments in the script, so it can encode itself, its still struggeling with larger scripts due to the recursion limit.
 
 Still trying to improve it.
 
