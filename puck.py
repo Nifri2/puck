@@ -93,9 +93,61 @@ def compile_file(fn):
         print(f'compiled {ln}b to pucked_{fn}')
 
 
+def decompiler_check(file):
+    with open(file, 'r') as f:
+        data = f.read()
+    
+    if data[0:6] == "s=eval":
+        if data[-7:] == 'exec(s)':
+            return True
+
+def decompile_file(file):
+
+    from io import StringIO 
+    import time
+    import sys
+
+    # validate file
+    print("checking file.... source code will be dumped")
+    print('-'*40)
+    time.sleep(1)
+    with open(file, 'r') as f:
+        data = f.read()
+    data = data[:-7] + 'print(s)'
+    exec(data)
+    print('-'*40)
+    
+
+    codeOut = StringIO()
+    codeErr = StringIO()
+
+    sys.stdout = codeOut
+    sys.stderr = codeErr
+
+    exec(data)
+
+    sys.stdout = sys.__stdout__
+    sys.stderr = sys.__stderr__
+    
+    if codeErr.getvalue() == '':
+        print("decompiled: " + file)
+    else:
+        print("error decompiling " + file)
+        print(codeErr.getvalue())
+
+    decom = codeOut.getvalue()
+
+    with open("decompiled_" + file, 'w') as f:
+        f.write(decom)
+    
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('file', help='file to compile')
     args = parser.parse_args()
-    compile_file(args.file)
+
+    if decompiler_check(args.file):
+        decompile_file(args.file)
+    else:
+        compile_file(args.file)
     
