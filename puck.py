@@ -107,34 +107,19 @@ def decompile_file(file):
     import time
     import sys
 
-    # validate file
-    print("checking file.... source code will be dumped")
-    print('-'*40)
-    time.sleep(1)
+    codeOut = StringIO()
+
+    sys.stdout = codeOut
+
     with open(file, 'r') as f:
         data = f.read()
     data = data[:-7] + 'print(s)'
-    exec(data)
-    print('-'*40)
-    
-
-    codeOut = StringIO()
-    codeErr = StringIO()
-
-    sys.stdout = codeOut
-    sys.stderr = codeErr
-
     exec(data)
 
     sys.stdout = sys.__stdout__
     sys.stderr = sys.__stderr__
     
-    if codeErr.getvalue() == '':
-        print("decompiled: " + file)
-    else:
-        print("error decompiling " + file)
-        print(codeErr.getvalue())
-
+    print("decompiled: " + file)
     decom = codeOut.getvalue()
 
     with open("decompiled_" + file, 'w') as f:
